@@ -1,3 +1,5 @@
+using API.Data;
+using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -5,10 +7,15 @@ namespace API.Controllers
   [ApiController]
   public class HomeController : ControllerBase
   {
-    [HttpGet]
-    public string Get()
+    [HttpGet("/")]
+    public List<Todo> Get([FromServices] AppDbContext context)
+      => context.Todos.ToList();
+    [HttpPost("/")]
+    public Todo Post([FromBody] Todo todo, [FromServices] AppDbContext context)
     {
-      return "Hello World!";
+      context.Todos.Add(todo);
+      context.SaveChanges();
+      return todo;
     }
   }
 }
